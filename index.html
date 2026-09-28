@@ -1,0 +1,719 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Evaluación de Santi</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Serif:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    color-scheme: light dark;
+    --kraft: #d9cfb4;
+    --kraft-line: #b9ad8c;
+    --paper: #faf8f2;
+    --paper-shadow: rgba(33,26,14,0.18);
+    --ink: #221f1a;
+    --ink-soft: #5a5346;
+    --rule: #cfc6ae;
+    --accent: #a8241c;
+    --accent-soft: rgba(168,36,28,0.1);
+    --good: #2b6b4a;
+    --good-soft: rgba(43,107,74,0.1);
+    --focus: #1f5c4f;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --kraft: #221d17;
+      --kraft-line: #3a3226;
+      --paper: #2b2620;
+      --paper-shadow: rgba(0,0,0,0.5);
+      --ink: #ece6d8;
+      --ink-soft: #bcb2a0;
+      --rule: #4a4234;
+      --accent: #e2685c;
+      --accent-soft: rgba(226,104,92,0.14);
+      --good: #6fbb92;
+      --good-soft: rgba(111,187,146,0.14);
+      --focus: #8fd6bb;
+    }
+  }
+
+  *{ box-sizing: border-box; }
+  body{
+    margin: 0;
+    background: var(--kraft);
+    color: var(--ink);
+    font-family: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+    display: flex;
+    justify-content: center;
+    padding-inline: 16px;
+    padding-block: 32px;
+  }
+
+  .page{
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .envelope-label{
+    font-family: "IBM Plex Mono", ui-monospace, Menlo, monospace;
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    text-align: center;
+    margin-bottom: 10px;
+  }
+
+  .memo{
+    background: var(--paper);
+    border: 1px solid var(--kraft-line);
+    box-shadow: 0 18px 34px -20px var(--paper-shadow), 0 2px 0 var(--kraft-line);
+    padding: 28px 24px 24px;
+    position: relative;
+  }
+
+  .memo::before{
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border: 1px solid var(--rule);
+    pointer-events: none;
+  }
+
+  h1{
+    font-family: "Special Elite", "IBM Plex Mono", monospace;
+    font-size: clamp(20px, 5.5vw, 25px);
+    letter-spacing: 0.01em;
+    text-wrap: balance;
+    margin: 0 0 4px;
+    line-height: 1.25;
+  }
+
+  .subtitle{
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin: 0 0 18px;
+  }
+
+  .meta{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 7px 10px;
+    font-family: "IBM Plex Mono", ui-monospace, monospace;
+    font-size: 12.5px;
+    border-top: 1px dashed var(--rule);
+    border-bottom: 1px dashed var(--rule);
+    padding-block: 12px;
+    margin-bottom: 22px;
+  }
+  .meta dt{ color: var(--ink-soft); margin: 0; }
+  .meta dd{ margin: 0; }
+  .meta input{
+    font: inherit;
+    color: inherit;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--rule);
+    width: 100%;
+    padding: 1px 0 2px;
+  }
+  .meta input:focus-visible{
+    outline: none;
+    border-bottom: 1px solid var(--focus);
+  }
+  .meta input::placeholder{ color: var(--ink-soft); opacity: 0.7; }
+
+  fieldset{
+    border: none;
+    padding: 0;
+    margin: 0 0 20px;
+  }
+  legend{
+    font-weight: 600;
+    font-size: 14.5px;
+    padding: 0 0 10px;
+    text-wrap: balance;
+  }
+
+  .opt{
+    display: block;
+    position: relative;
+    margin-bottom: 7px;
+  }
+  .opt input{
+    position: absolute;
+    opacity: 0;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+  .opt label{
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    border: 1px solid var(--rule);
+    padding: 8px 11px;
+    font-size: 14px;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: border-color .12s ease, background-color .12s ease;
+  }
+  .opt .letter{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+    width: 18px;
+    height: 18px;
+    flex: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1px;
+  }
+  .opt input:checked + label{
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+  .opt input:checked + label .letter{
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .opt input:focus-visible + label{
+    outline: 2px solid var(--focus);
+    outline-offset: 1px;
+  }
+
+  textarea{
+    width: 100%;
+    font: inherit;
+    font-size: 13.5px;
+    color: var(--ink);
+    background: transparent;
+    border: 1px solid var(--rule);
+    padding: 9px 10px;
+    resize: vertical;
+    min-height: 56px;
+  }
+  textarea:focus-visible{
+    outline: none;
+    border-color: var(--focus);
+  }
+
+  .submit{
+    width: 100%;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--paper);
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    padding: 12px;
+    cursor: pointer;
+    margin-top: 4px;
+  }
+  .submit:hover{ opacity: 0.88; }
+  .submit:focus-visible{ outline: 2px solid var(--focus); outline-offset: 2px; }
+  .submit:disabled{ opacity: 0.6; cursor: default; }
+
+  .hint{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--accent);
+    margin: -12px 0 16px;
+    min-height: 14px;
+  }
+
+  /* --- resultado --- */
+  .result-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .stamp{
+    font-family: "Special Elite", monospace;
+    display: inline-block;
+    border: 3px solid var(--stamp-color, var(--accent));
+    color: var(--stamp-color, var(--accent));
+    padding: 8px 12px;
+    transform: rotate(-4deg);
+    text-transform: uppercase;
+    font-size: 14px;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    text-align: center;
+    text-wrap: balance;
+  }
+  .score{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    text-align: right;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .score b{
+    display: block;
+    font-size: 22px;
+    color: var(--ink);
+  }
+
+  .roast{
+    font-size: 15.5px;
+    line-height: 1.55;
+    margin: 0 0 18px;
+  }
+
+  .report{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    white-space: pre-wrap;
+    border: 1px dashed var(--rule);
+    padding: 12px;
+    color: var(--ink-soft);
+    margin: 0 0 16px;
+  }
+
+  .actions{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .btn{
+    flex: 1 1 140px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    text-align: center;
+    text-decoration: none;
+    padding: 10px 8px;
+    border: 1px solid var(--ink);
+    color: var(--ink);
+    background: transparent;
+    cursor: pointer;
+  }
+  .btn:hover{ background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .btn:focus-visible{ outline: 2px solid var(--focus); outline-offset: 2px; }
+  .btn.primary{ background: var(--ink); color: var(--paper); }
+  .btn.primary:hover{ background: var(--accent); border-color: var(--accent); color: var(--paper); }
+
+  .footnote{
+    text-align: center;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-top: 14px;
+    letter-spacing: 0.02em;
+  }
+
+  .savenote{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin: 12px 0 0;
+    text-align: center;
+  }
+
+  /* --- archivo / historial --- */
+  .archive{
+    background: var(--paper);
+    border: 1px solid var(--kraft-line);
+    box-shadow: 0 12px 24px -18px var(--paper-shadow), 0 2px 0 var(--kraft-line);
+    padding: 20px 24px 22px;
+    margin-top: 18px;
+  }
+  .archive-head{
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 10px;
+    border-bottom: 1px dashed var(--rule);
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+  }
+  .archive-head h2{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin: 0;
+    color: var(--ink-soft);
+  }
+  .archive-refresh{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    background: none;
+    border: none;
+    color: var(--ink-soft);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+  }
+  .archive-refresh:hover{ color: var(--accent); }
+
+  .archive-status{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .entries{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .entry{
+    border: 1px solid var(--rule);
+    padding: 10px 12px;
+  }
+  .entry-top{
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    margin-bottom: 4px;
+  }
+  .entry-verdict{ font-weight: 600; }
+  .entry-score{ color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .entry-meta{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .entry-obs{
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--ink);
+  }
+
+  [hidden]{ display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <p class="envelope-label">Evaluación de compañerismo</p>
+
+  <div class="memo">
+    <form id="quiz">
+      <h1>Evaluación de claridad comunicacional</h1>
+      <p class="subtitle">Formulario confidencial — ningún compañero se va a sword después de completarlo</p>
+
+      <dl class="meta">
+        <dt>De:</dt>
+        <dd><input id="from" type="text" placeholder="tu nombre (porfa)" autocomplete="off"></dd>
+        <dt>Para:</dt>
+        <dd>Santi</dd>
+        <dt>Asunto:</dt>
+        <dd>Desempeño al explicar cosas</dd>
+        <dt>Fecha:</dt>
+        <dd id="fecha"></dd>
+      </dl>
+
+      <fieldset>
+        <legend>1. ¿Entendiste su respuesta a la primera?</legend>
+        <div class="opt">
+          <input type="radio" name="q1" id="q1a" value="2|Sí, quedó clarísimo" required>
+          <label for="q1a"><span class="letter">A</span>Sí, quedó clarísimo</label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="q1" id="q1b" value="1|Maso">
+          <label for="q1b"><span class="letter">B</span>Maso</label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="q1" id="q1c" value="0|No, seguimos igual que al principio">
+          <label for="q1c"><span class="letter">C</span>No, seguimos igual que al principio</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>2. ¿Sentiste que repitió lo mismo con otras palabras?</legend>
+        <div class="opt">
+          <input type="radio" name="q2" id="q2a" value="2|No, fue directo al grano" required>
+          <label for="q2a"><span class="letter">A</span>No, fue directo al grano</label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="q2" id="q2b" value="1|La hizo un poco larga">
+          <label for="q2b"><span class="letter">B</span>La hizo un poco larga</label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="q2" id="q2c" value="0|Es un bucle while(true), todavía seguimos ahí">
+          <label for="q2c"><span class="letter">C</span>Es un bucle while(true), todavía seguimos ahí</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. ¿Respondió lo que realmente le preguntaste?</legend>
+        <div class="opt">
+          <input type="radio" name="q3" id="q3a" value="2|Exacto lo que necesitaba" required>
+          <label for="q3a"><span class="letter">A</span>Exacto lo que necesitaba</label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="q3" id="q3b" value="1|A medias, tuve que insistir">
+          <label for="q3b"><span class="letter">B</span>A medias, tuve que insistir</label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="q3" id="q3c" value="0|Terminé resolviéndolo yo solo/a">
+          <label for="q3c"><span class="letter">C</span>Terminé resolviéndolo yo solo/a</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>4. Observaciones para el legajo (opcional)</legend>
+        <textarea id="obs" placeholder="ej: explicó bien pero tardó 20 minutos en llegar al punto..." maxlength="240"></textarea>
+      </fieldset>
+
+      <p class="hint" id="hint" aria-live="polite"></p>
+      <button class="submit" type="submit" id="submitBtn">Enviar evaluación</button>
+    </form>
+
+    <div id="result" hidden>
+      <div class="result-head">
+        <span class="stamp" id="stampText"></span>
+        <span class="score">puntaje<b id="scoreText"></b>de 6</span>
+      </div>
+      <p class="roast" id="roastText"></p>
+      <div class="report" id="reportText"></div>
+      <div class="actions">
+        <button class="btn primary" id="copyBtn" type="button">Copiar informe</button>
+        <a class="btn" id="waBtn" href="#" target="_blank" rel="noopener">Enviar por WhatsApp</a>
+        <button class="btn" id="retryBtn" type="button">Volver a evaluar</button>
+      </div>
+      <p class="savenote" id="saveNote"></p>
+    </div>
+  </div>
+
+  <div class="archive">
+    <div class="archive-head">
+      <h2>Legajo — evaluaciones guardadas</h2>
+      <button class="archive-refresh" id="refreshBtn" type="button">actualizar</button>
+    </div>
+    <p class="archive-status" id="archiveStatus">Cargando…</p>
+    <div class="entries" id="entries"></div>
+  </div>
+
+  <p class="footnote">Ningún RR.HH. fue consultado.</p>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.2/firebase-firestore-compat.js"></script>
+<script>
+(function(){
+  var firebaseConfig = {
+    apiKey: "AIzaSyD03rd1JhuSGws6Rm-Iq-9swmp3SxjqT3A",
+    authDomain: "evaluacion-santi.firebaseapp.com",
+    projectId: "evaluacion-santi",
+    storageBucket: "evaluacion-santi.firebasestorage.app",
+    messagingSenderId: "243128328463",
+    appId: "1:243128328463:web:5fe56472646f7f8df0de7a"
+  };
+  firebase.initializeApp(firebaseConfig);
+  var db = firebase.firestore();
+
+  var fechaEl = document.getElementById('fecha');
+  try{
+    fechaEl.textContent = new Date().toLocaleDateString('es-AR', {day:'numeric', month:'long', year:'numeric'});
+  }catch(e){
+    fechaEl.textContent = new Date().toDateString();
+  }
+
+  var form = document.getElementById('quiz');
+  var hint = document.getElementById('hint');
+  var result = document.getElementById('result');
+  var stampText = document.getElementById('stampText');
+  var scoreText = document.getElementById('scoreText');
+  var roastText = document.getElementById('roastText');
+  var reportText = document.getElementById('reportText');
+  var copyBtn = document.getElementById('copyBtn');
+  var waBtn = document.getElementById('waBtn');
+  var retryBtn = document.getElementById('retryBtn');
+  var saveNote = document.getElementById('saveNote');
+  var submitBtn = document.getElementById('submitBtn');
+  var archiveStatus = document.getElementById('archiveStatus');
+  var entriesEl = document.getElementById('entries');
+  var refreshBtn = document.getElementById('refreshBtn');
+
+  function fmtWhen(ts){
+    try{
+      return new Date(ts).toLocaleString('es-AR', {day:'numeric', month:'short', hour:'2-digit', minute:'2-digit'});
+    }catch(e){
+      return '';
+    }
+  }
+
+  function renderEntries(docs){
+    if(!docs.length){
+      archiveStatus.textContent = 'Todavía no hay evaluaciones guardadas.';
+      archiveStatus.hidden = false;
+      entriesEl.innerHTML = '';
+      return;
+    }
+    archiveStatus.hidden = true;
+    entriesEl.innerHTML = '';
+    docs.forEach(function(snap){
+      var d = snap.data() || {};
+      var row = document.createElement('div');
+      row.className = 'entry';
+
+      var top = document.createElement('div');
+      top.className = 'entry-top';
+      var vLabel = document.createElement('span');
+      vLabel.className = 'entry-verdict';
+      vLabel.textContent = String(d.verdictLabel || '—');
+      var vScore = document.createElement('span');
+      vScore.className = 'entry-score';
+      vScore.textContent = (typeof d.total === 'number' ? d.total : '?') + '/6';
+      top.appendChild(vLabel);
+      top.appendChild(vScore);
+
+      var meta = document.createElement('div');
+      meta.className = 'entry-meta';
+      meta.textContent = fmtWhen(d.ts) + ' — ' + (d.from ? String(d.from) : 'anónimo');
+
+      row.appendChild(top);
+      row.appendChild(meta);
+
+      if(d.obs){
+        var obsEl = document.createElement('div');
+        obsEl.className = 'entry-obs';
+        obsEl.textContent = '"' + String(d.obs) + '"';
+        row.appendChild(obsEl);
+      }
+
+      entriesEl.appendChild(row);
+    });
+  }
+
+  function loadEntries(){
+    archiveStatus.hidden = false;
+    archiveStatus.textContent = 'Cargando…';
+    db.collection('respuestas').orderBy('ts', 'desc').limit(30).get()
+      .then(function(snap){ renderEntries(snap.docs); })
+      .catch(function(){
+        archiveStatus.textContent = 'No se pudo cargar el historial ahora mismo.';
+      });
+  }
+
+  refreshBtn.addEventListener('click', loadEntries);
+  loadEntries();
+
+  var verdicts = [
+    { min: 5, label: 'Crack', color: 'good',
+      roast: 'Sorprendente: Un tremendo crack' },
+    { min: 3, label: 'Medio medio', color: 'accent',
+      roast: 'Se entendió pero costó' },
+    { min: 0, label: 'Tremendo hdp', color: 'accent',
+      roast: 'Ponele onda que por algo te pagan' }
+  ];
+
+  form.addEventListener('submit', function(ev){
+    ev.preventDefault();
+    var qs = ['q1','q2','q3'];
+    var total = 0;
+    var lines = [];
+    for(var i=0;i<qs.length;i++){
+      var picked = form.querySelector('input[name="' + qs[i] + '"]:checked');
+      if(!picked){
+        hint.textContent = 'Faltan preguntas por responder.';
+        return;
+      }
+      var parts = picked.value.split('|');
+      total += parseInt(parts[0], 10);
+      lines.push((i+1) + '. ' + parts[1]);
+    }
+    hint.textContent = '';
+
+    var verdict = verdicts[verdicts.length - 1];
+    for(var v=0; v<verdicts.length; v++){
+      if(total >= verdicts[v].min){ verdict = verdicts[v]; break; }
+    }
+
+    var stampEl = document.getElementById('stampText');
+    stampEl.style.setProperty('--stamp-color', verdict.color === 'good' ? 'var(--good)' : 'var(--accent)');
+    stampText.textContent = verdict.label;
+    scoreText.textContent = total;
+    roastText.textContent = verdict.roast;
+
+    var from = document.getElementById('from').value.trim();
+    var obs = document.getElementById('obs').value.trim();
+
+    var report = 'INFORME DE EVALUACIÓN — PARA: SANTI\n';
+    report += 'Veredicto: ' + verdict.label + '  (' + total + '/6)\n';
+    report += lines.join('\n') + '\n';
+    if(obs){ report += 'Observaciones: ' + obs + '\n'; }
+    report += (from ? 'Evaluador: ' + from : 'Evaluador: anónimo');
+    reportText.textContent = report;
+
+    waBtn.href = 'https://wa.me/?text=' + encodeURIComponent(report);
+
+    form.hidden = true;
+    result.hidden = false;
+
+    saveNote.textContent = 'Guardando…';
+    db.collection('respuestas').add({
+      from: from || 'anónimo',
+      total: total,
+      verdictLabel: verdict.label,
+      lines: lines,
+      obs: obs,
+      ts: Date.now()
+    }).then(function(){
+      saveNote.textContent = 'Guardado — Santi va a poder verlo en "Legajo" abajo.';
+      loadEntries();
+    }).catch(function(){
+      saveNote.textContent = 'No se pudo guardar automáticamente. Usá los botones de arriba para mandárselo a Santi.';
+    });
+  });
+
+  copyBtn.addEventListener('click', function(){
+    var text = reportText.textContent;
+    function fallback(){
+      try{
+        var ta = document.createElement('textarea');
+        ta.value = text;
+        ta.style.position = 'fixed';
+        ta.style.opacity = '0';
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        return true;
+      }catch(e){ return false; }
+    }
+    var ok = false;
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).catch(function(){ fallback(); });
+        ok = true;
+      }else{
+        ok = fallback();
+      }
+    }catch(e){
+      ok = fallback();
+    }
+    copyBtn.textContent = ok ? 'Copiado ✓' : 'No se pudo copiar';
+    setTimeout(function(){ copyBtn.textContent = 'Copiar informe'; }, 1800);
+  });
+
+  retryBtn.addEventListener('click', function(){
+    form.reset();
+    result.hidden = true;
+    form.hidden = false;
+    hint.textContent = '';
+  });
+})();
+</script>
+</body>
+</html>

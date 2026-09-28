@@ -1,0 +1,23 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /respuestas/{docId} {
+      allow read: if true;
+
+      allow create: if request.resource.data.keys().hasOnly(['from', 'total', 'verdictLabel', 'lines', 'obs', 'ts'])
+        && request.resource.data.from is string && request.resource.data.from.size() <= 60
+        && request.resource.data.total is int && request.resource.data.total >= 0 && request.resource.data.total <= 6
+        && request.resource.data.verdictLabel is string && request.resource.data.verdictLabel.size() <= 60
+        && request.resource.data.lines is list && request.resource.data.lines.size() <= 10
+        && request.resource.data.obs is string && request.resource.data.obs.size() <= 500
+        && request.resource.data.ts is int;
+
+      allow update, delete: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
