@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Evaluación de Santi</title>
+<link rel="icon" type="image/png" href="favicon.png">
+<link rel="apple-touch-icon" href="favicon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=IBM+Plex+Serif:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -55,6 +57,31 @@
   .page{
     width: 100%;
     max-width: 480px;
+  }
+
+  /* --- pantalla partida --- */
+  .split{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  .col-side{
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+  }
+  @media (min-width: 900px){
+    .page{ max-width: 1080px; }
+    .split{
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 28px;
+      align-items: start;
+    }
+    .col-form{
+      position: sticky;
+      top: 24px;
+    }
   }
 
   .envelope-label{
@@ -330,7 +357,6 @@
     border: 1px solid var(--kraft-line);
     box-shadow: 0 12px 24px -18px var(--paper-shadow), 0 2px 0 var(--kraft-line);
     padding: 20px 24px 22px;
-    margin-top: 18px;
   }
   .archive-head{
     display: flex;
@@ -398,6 +424,167 @@
     color: var(--ink);
   }
 
+  /* --- muñequito --- */
+  .mood{
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 16px;
+    align-items: center;
+  }
+  .mood-fig{ width: 150px; height: auto; display: block; overflow: visible; }
+  .mood-info{ min-width: 0; }
+  .mood-avg{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-variant-numeric: tabular-nums;
+    margin: 0 0 8px;
+  }
+  .mood-avg b{
+    font-size: 30px;
+    color: var(--ink);
+    font-weight: 600;
+  }
+  .mood-stamp{ font-size: 13px; margin-bottom: 10px; }
+  .mood-text{
+    font-size: 14px;
+    line-height: 1.45;
+    margin: 6px 0 0;
+  }
+
+  .fig .ink{ fill: var(--ink); }
+  .fig .ink-stroke{ stroke: var(--ink); }
+  .fig .paper-stroke{ stroke: var(--paper); }
+  .fig .arm, .fig .head-g, .fig .body-g{
+    transition: transform .6s cubic-bezier(.3,1.4,.5,1);
+    transform-box: view-box;
+  }
+  .fig .arm-l{ transform-origin: 78px 132px; }
+  .fig .arm-r{ transform-origin: 122px 132px; }
+  .fig .head-g{ transform-origin: 100px 118px; }
+  .fig .face{ transition: filter .6s ease; }
+  .fig .prop{ opacity: 0; transition: opacity .4s ease; }
+
+  /* bien: brazos arriba, saltando, corona */
+  .fig.is-good .arm-l{ transform: rotate(125deg); }
+  .fig.is-good .arm-r{ transform: rotate(-125deg); }
+  .fig.is-good .body-g{ animation: jump 1.1s ease-in-out infinite; }
+  .fig.is-good .p-good{ opacity: 1; }
+  .fig.is-good .sparkle{ animation: twinkle 1.4s ease-in-out infinite; }
+  .fig.is-good .sparkle:nth-of-type(2){ animation-delay: .5s; }
+
+  /* medio: se encoge de hombros */
+  .fig.is-mid .arm-l{ transform: rotate(70deg); }
+  .fig.is-mid .arm-r{ transform: rotate(-70deg); }
+  .fig.is-mid .head-g{ animation: sway 3s ease-in-out infinite; }
+  .fig.is-mid .p-mid{ opacity: 1; }
+
+  /* mal: cabizbajo, en gris, con nube */
+  .fig.is-bad .arm-l{ transform: rotate(-4deg); }
+  .fig.is-bad .arm-r{ transform: rotate(4deg); }
+  .fig.is-bad .head-g{ transform: translateY(8px) rotate(-14deg); }
+  .fig.is-bad .face{ filter: grayscale(1) brightness(.85) contrast(.9); }
+  .fig.is-bad .p-bad{ opacity: 1; }
+  .fig.is-bad .drop{ animation: rain 1s linear infinite; }
+  .fig.is-bad .drop:nth-of-type(2){ animation-delay: .35s; }
+  .fig.is-bad .drop:nth-of-type(3){ animation-delay: .7s; }
+
+  .fig.is-none .face{ filter: grayscale(.6) opacity(.7); }
+
+  @keyframes jump{ 0%,100%{ transform: translateY(0); } 45%{ transform: translateY(-12px); } }
+  @keyframes sway{ 0%,100%{ transform: rotate(-6deg); } 50%{ transform: rotate(6deg); } }
+  @keyframes twinkle{ 0%,100%{ opacity: .2; } 50%{ opacity: 1; } }
+  @keyframes rain{ 0%{ transform: translateY(0); opacity: 1; } 100%{ transform: translateY(18px); opacity: 0; } }
+  @media (prefers-reduced-motion: reduce){
+    .fig *{ animation: none !important; transition: none !important; }
+  }
+
+  /* --- gráfico por persona --- */
+  .chart-sub{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin: -6px 0 12px;
+  }
+  .bars{
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: relative;
+  }
+  .bar-row{
+    display: grid;
+    grid-template-columns: minmax(0, 110px) 1fr 64px;
+    gap: 10px;
+    align-items: center;
+    padding: 5px 4px;
+    cursor: default;
+  }
+  .bar-row:hover, .bar-row:focus-visible{ background: var(--accent-soft); outline: none; }
+  .bar-name{
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .bar-track{
+    position: relative;
+    height: 14px;
+    background:
+      linear-gradient(to right, transparent calc(33.333% - .5px), var(--rule) calc(33.333% - .5px), var(--rule) calc(33.333% + .5px), transparent calc(33.333% + .5px)),
+      linear-gradient(to right, transparent calc(66.666% - .5px), var(--rule) calc(66.666% - .5px), var(--rule) calc(66.666% + .5px), transparent calc(66.666% + .5px));
+    border-left: 1px solid var(--ink-soft);
+  }
+  .bar-fill{
+    position: absolute;
+    left: 0; top: 1px; bottom: 1px;
+    background: var(--focus);
+    border-radius: 0 4px 4px 0;
+    min-width: 2px;
+    transition: width .5s ease;
+  }
+  .bar-val{
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 12px;
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    white-space: nowrap;
+  }
+  .bar-val small{ color: var(--ink-soft); font-size: 10.5px; }
+  .bar-axis{
+    display: grid;
+    grid-template-columns: minmax(0, 110px) 1fr 64px;
+    gap: 10px;
+    padding: 2px 4px 0;
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+  }
+  .bar-axis .ticks{ position: relative; height: 14px; }
+  .bar-axis .ticks span{ position: absolute; transform: translateX(-50%); }
+  .bar-axis .ticks span:nth-child(1){ left: 0; }
+  .bar-axis .ticks span:nth-child(2){ left: 33.333%; }
+  .bar-axis .ticks span:nth-child(3){ left: 66.666%; }
+  .bar-axis .ticks span:nth-child(4){ left: 100%; }
+  .tip{
+    position: absolute;
+    z-index: 2;
+    pointer-events: none;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: "IBM Plex Mono", monospace;
+    font-size: 11px;
+    line-height: 1.5;
+    padding: 6px 9px;
+    white-space: nowrap;
+    box-shadow: 0 6px 16px -8px var(--paper-shadow);
+  }
+
+  @media (max-width: 420px){
+    .mood{ grid-template-columns: 1fr; justify-items: center; text-align: center; }
+    .bar-row, .bar-axis{ grid-template-columns: minmax(0, 80px) 1fr 58px; }
+  }
+
   [hidden]{ display: none !important; }
 </style>
 </head>
@@ -406,9 +593,11 @@
 <div class="page">
   <p class="envelope-label">Evaluación de compañerismo</p>
 
+  <div class="split">
+  <div class="col-form">
   <div class="memo">
     <form id="quiz">
-      <h1>Evaluación de claridad comunicacional</h1>
+      <h1>Evaluación de ayuda brindada</h1>
       <p class="subtitle">Formulario confidencial — ningún compañero se va a sword después de completarlo</p>
 
       <dl class="meta">
@@ -417,62 +606,62 @@
         <dt>Para:</dt>
         <dd>Santi</dd>
         <dt>Asunto:</dt>
-        <dd>Desempeño al explicar cosas</dd>
+        <dd>Desempeño al ayudar</dd>
         <dt>Fecha:</dt>
         <dd id="fecha"></dd>
       </dl>
 
       <fieldset>
-        <legend>1. ¿Entendiste su respuesta a la primera?</legend>
+        <legend>1. ¿Te resolvió el problema?</legend>
         <div class="opt">
-          <input type="radio" name="q1" id="q1a" value="2|Sí, quedó clarísimo" required>
-          <label for="q1a"><span class="letter">A</span>Sí, quedó clarísimo</label>
+          <input type="radio" name="q1" id="q1a" value="2|Sí, quedó andando" required>
+          <label for="q1a"><span class="letter">A</span>Sí, quedó andando</label>
         </div>
         <div class="opt">
-          <input type="radio" name="q1" id="q1b" value="1|Maso">
-          <label for="q1b"><span class="letter">B</span>Maso</label>
+          <input type="radio" name="q1" id="q1b" value="1|A medias, el resto lo terminé yo">
+          <label for="q1b"><span class="letter">B</span>A medias, el resto lo terminé yo</label>
         </div>
         <div class="opt">
-          <input type="radio" name="q1" id="q1c" value="0|No, seguimos igual que al principio">
-          <label for="q1c"><span class="letter">C</span>No, seguimos igual que al principio</label>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <legend>2. ¿Sentiste que repitió lo mismo con otras palabras?</legend>
-        <div class="opt">
-          <input type="radio" name="q2" id="q2a" value="2|No, fue directo al grano" required>
-          <label for="q2a"><span class="letter">A</span>No, fue directo al grano</label>
-        </div>
-        <div class="opt">
-          <input type="radio" name="q2" id="q2b" value="1|La hizo un poco larga">
-          <label for="q2b"><span class="letter">B</span>La hizo un poco larga</label>
-        </div>
-        <div class="opt">
-          <input type="radio" name="q2" id="q2c" value="0|Es un bucle while(true), todavía seguimos ahí">
-          <label for="q2c"><span class="letter">C</span>Es un bucle while(true), todavía seguimos ahí</label>
+          <input type="radio" name="q1" id="q1c" value="0|No, ahora tengo dos problemas">
+          <label for="q1c"><span class="letter">C</span>No, ahora tengo dos problemas</label>
         </div>
       </fieldset>
 
       <fieldset>
-        <legend>3. ¿Respondió lo que realmente le preguntaste?</legend>
+        <legend>2. ¿Qué tan rápido te dio bola?</legend>
         <div class="opt">
-          <input type="radio" name="q3" id="q3a" value="2|Exacto lo que necesitaba" required>
-          <label for="q3a"><span class="letter">A</span>Exacto lo que necesitaba</label>
+          <input type="radio" name="q2" id="q2a" value="2|Al toque" required>
+          <label for="q2a"><span class="letter">A</span>Al toque</label>
         </div>
         <div class="opt">
-          <input type="radio" name="q3" id="q3b" value="1|A medias, tuve que insistir">
-          <label for="q3b"><span class="letter">B</span>A medias, tuve que insistir</label>
+          <input type="radio" name="q2" id="q2b" value="1|Después de un &quot;ahora te veo&quot;">
+          <label for="q2b"><span class="letter">B</span>Después de un "ahora te veo"</label>
         </div>
         <div class="opt">
-          <input type="radio" name="q3" id="q3c" value="0|Terminé resolviéndolo yo solo/a">
-          <label for="q3c"><span class="letter">C</span>Terminé resolviéndolo yo solo/a</label>
+          <input type="radio" name="q2" id="q2c" value="0|Sigo esperando el &quot;ahora te veo&quot;">
+          <label for="q2c"><span class="letter">C</span>Sigo esperando el "ahora te veo"</label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>3. ¿Cómo fue la onda al ayudarte?</legend>
+        <div class="opt">
+          <input type="radio" name="q3" id="q3a" value="2|Re buena, cero drama" required>
+          <label for="q3a"><span class="letter">A</span>Re buena, cero drama</label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="q3" id="q3b" value="1|Bien, pero se notaba que estaba en otra">
+          <label for="q3b"><span class="letter">B</span>Bien, pero se notaba que estaba en otra</label>
+        </div>
+        <div class="opt">
+          <input type="radio" name="q3" id="q3c" value="0|Me hizo sentir que le arruiné el día">
+          <label for="q3c"><span class="letter">C</span>Me hizo sentir que le arruiné el día</label>
         </div>
       </fieldset>
 
       <fieldset>
         <legend>4. Observaciones para el legajo (opcional)</legend>
-        <textarea id="obs" placeholder="ej: explicó bien pero tardó 20 minutos en llegar al punto..." maxlength="240"></textarea>
+        <textarea id="obs" placeholder="ej: me ayudó, pero primero me preguntó si había probado reiniciar..." maxlength="240"></textarea>
       </fieldset>
 
       <p class="hint" id="hint" aria-live="polite"></p>
@@ -494,6 +683,79 @@
       <p class="savenote" id="saveNote"></p>
     </div>
   </div>
+  </div>
+
+  <div class="col-side">
+  <div class="archive">
+    <div class="archive-head">
+      <h2>Estado actual de Santi</h2>
+    </div>
+    <div class="mood">
+      <svg class="fig mood-fig is-none" id="fig" viewBox="0 -34 200 284" role="img" aria-labelledby="figLabel">
+        <title id="figLabel">Muñequito de Santi</title>
+        <defs>
+          <clipPath id="faceClip"><circle cx="100" cy="72" r="43"/></clipPath>
+        </defs>
+
+        <ellipse cx="100" cy="242" rx="38" ry="5" fill="var(--rule)"/>
+
+        <g class="prop p-bad">
+          <g fill="var(--ink-soft)">
+            <circle cx="80" cy="-8" r="13"/>
+            <circle cx="100" cy="-16" r="17"/>
+            <circle cx="121" cy="-8" r="13"/>
+            <rect x="72" y="-8" width="56" height="13" rx="6"/>
+          </g>
+          <g stroke="#5b8bd9" stroke-width="3" stroke-linecap="round">
+            <line class="drop" x1="84" y1="12" x2="82" y2="19"/>
+            <line class="drop" x1="100" y1="12" x2="98" y2="19"/>
+            <line class="drop" x1="116" y1="12" x2="114" y2="19"/>
+          </g>
+        </g>
+
+        <text class="prop p-mid" x="150" y="28" font-family="Special Elite, monospace" font-size="38" fill="var(--ink-soft)">?</text>
+
+        <g class="prop p-good" fill="#e0b23a">
+          <path class="sparkle" d="M34 50 l4 10 l10 4 l-10 4 l-4 10 l-4 -10 l-10 -4 l10 -4 z"/>
+          <path class="sparkle" d="M166 84 l3 8 l8 3 l-8 3 l-3 8 l-3 -8 l-8 -3 l8 -3 z"/>
+        </g>
+
+        <g class="body-g">
+          <g class="arm arm-l">
+            <line class="ink-stroke" x1="78" y1="132" x2="60" y2="178" stroke-width="10" stroke-linecap="round"/>
+            <circle class="ink" cx="60" cy="178" r="7"/>
+          </g>
+          <g class="arm arm-r">
+            <line class="ink-stroke" x1="122" y1="132" x2="140" y2="178" stroke-width="10" stroke-linecap="round"/>
+            <circle class="ink" cx="140" cy="178" r="7"/>
+          </g>
+          <line class="ink-stroke" x1="91" y1="184" x2="87" y2="232" stroke-width="11" stroke-linecap="round"/>
+          <line class="ink-stroke" x1="109" y1="184" x2="113" y2="232" stroke-width="11" stroke-linecap="round"/>
+          <rect class="ink" x="75" y="116" width="50" height="74" rx="16"/>
+          <g class="head-g">
+            <circle class="ink" cx="100" cy="72" r="47"/>
+            <image class="face" href="avatar.jpg" x="57" y="29" width="86" height="86" clip-path="url(#faceClip)" preserveAspectRatio="xMidYMid slice"/>
+          </g>
+          <path class="prop p-good" d="M74 32 L78 8 L90 22 L100 2 L110 22 L122 8 L126 32 Z" fill="#e0b23a" stroke="var(--ink)" stroke-width="2" stroke-linejoin="round"/>
+        </g>
+      </svg>
+      <div class="mood-info">
+        <p class="mood-avg"><b id="avgText">—</b> / 6<br><span id="avgCount">promedio general</span></p>
+        <span class="stamp mood-stamp" id="moodStamp">Sin datos</span>
+        <p class="mood-text" id="moodText">Todavía nadie lo evaluó.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="archive">
+    <div class="archive-head">
+      <h2>Promedio por persona</h2>
+    </div>
+    <p class="chart-sub">Puntaje promedio (0–6) de cada evaluador · (n) = cantidad de evaluaciones</p>
+    <p class="archive-status" id="chartStatus">Cargando…</p>
+    <div class="bars" id="bars"></div>
+    <div class="bar-axis" id="barAxis" hidden><span></span><span class="ticks"><span>0</span><span>2</span><span>4</span><span>6</span></span><span></span></div>
+  </div>
 
   <div class="archive">
     <div class="archive-head">
@@ -502,6 +764,8 @@
     </div>
     <p class="archive-status" id="archiveStatus">Cargando…</p>
     <div class="entries" id="entries"></div>
+  </div>
+  </div>
   </div>
 
   <p class="footnote">Ningún RR.HH. fue consultado.</p>
@@ -596,27 +860,176 @@
     });
   }
 
+  var verdicts = [
+    { min: 5, label: 'Crack', color: 'good', mood: 'is-good',
+      roast: 'Sorprendente: Un tremendo crack' },
+    { min: 3, label: 'Medio medio', color: 'accent', mood: 'is-mid',
+      roast: 'Ayudó, pero costó' },
+    { min: 0, label: 'Tremendo hdp', color: 'accent', mood: 'is-bad',
+      roast: 'Ponele onda que por algo te pagan' }
+  ];
+
+  function verdictFor(score){
+    for(var v=0; v<verdicts.length; v++){
+      if(score >= verdicts[v].min){ return verdicts[v]; }
+    }
+    return verdicts[verdicts.length - 1];
+  }
+
+  function fmtAvg(n){
+    return n.toLocaleString('es-AR', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+  }
+
+  // --- muñequito: cambia según el promedio general ---
+  var fig = document.getElementById('fig');
+  var avgText = document.getElementById('avgText');
+  var avgCount = document.getElementById('avgCount');
+  var moodStamp = document.getElementById('moodStamp');
+  var moodText = document.getElementById('moodText');
+
+  function renderMood(rows){
+    fig.classList.remove('is-none', 'is-good', 'is-mid', 'is-bad');
+    if(!rows.length){
+      fig.classList.add('is-none');
+      avgText.textContent = '—';
+      avgCount.textContent = 'promedio general';
+      moodStamp.textContent = 'Sin datos';
+      moodStamp.style.setProperty('--stamp-color', 'var(--ink-soft)');
+      moodText.textContent = 'Todavía nadie lo evaluó.';
+      return;
+    }
+    var sum = 0;
+    rows.forEach(function(r){ sum += r.total; });
+    var avg = sum / rows.length;
+    // el promedio se redondea para caer en la misma escala que cada evaluación
+    var verdict = verdictFor(Math.round(avg));
+    fig.classList.add(verdict.mood);
+    avgText.textContent = fmtAvg(avg);
+    avgCount.textContent = 'promedio general · ' + rows.length + (rows.length === 1 ? ' evaluación' : ' evaluaciones');
+    moodStamp.textContent = verdict.label;
+    moodStamp.style.setProperty('--stamp-color', verdict.color === 'good' ? 'var(--good)' : 'var(--accent)');
+    moodText.textContent = verdict.roast;
+  }
+
+  // --- gráfico: promedio por persona ---
+  var barsEl = document.getElementById('bars');
+  var barAxis = document.getElementById('barAxis');
+  var chartStatus = document.getElementById('chartStatus');
+  var tip = document.createElement('div');
+  tip.className = 'tip';
+  tip.hidden = true;
+  barsEl.appendChild(tip);
+
+  function personKey(name){
+    return String(name || 'anónimo').trim().toLowerCase()
+      .normalize('NFD').replace(/[̀-ͯ]/g, '') || 'anonimo';
+  }
+
+  function renderChart(rows){
+    Array.prototype.slice.call(barsEl.querySelectorAll('.bar-row')).forEach(function(el){ el.remove(); });
+    tip.hidden = true;
+    if(!rows.length){
+      chartStatus.textContent = 'Todavía no hay evaluaciones para graficar.';
+      chartStatus.hidden = false;
+      barAxis.hidden = true;
+      return;
+    }
+    // rows viene ordenado del más nuevo al más viejo: el primer nombre visto es la grafía más reciente
+    var groups = {};
+    var order = [];
+    rows.forEach(function(r){
+      var k = personKey(r.from);
+      if(!groups[k]){
+        groups[k] = { name: String(r.from || 'anónimo'), sum: 0, n: 0, last: r.ts };
+        order.push(k);
+      }
+      groups[k].sum += r.total;
+      groups[k].n += 1;
+    });
+    var people = order.map(function(k){
+      var g = groups[k];
+      g.avg = g.sum / g.n;
+      return g;
+    }).sort(function(a, b){ return b.avg - a.avg || b.n - a.n; });
+
+    chartStatus.hidden = true;
+    barAxis.hidden = false;
+    people.forEach(function(p){
+      var row = document.createElement('div');
+      row.className = 'bar-row';
+      row.tabIndex = 0;
+      row.setAttribute('aria-label', p.name + ': promedio ' + fmtAvg(p.avg) + ' de 6, ' + p.n + ' evaluaciones');
+
+      var name = document.createElement('span');
+      name.className = 'bar-name';
+      name.textContent = p.name;
+
+      var track = document.createElement('span');
+      track.className = 'bar-track';
+      var fill = document.createElement('span');
+      fill.className = 'bar-fill';
+      fill.style.width = (p.avg / 6 * 100) + '%';
+      track.appendChild(fill);
+
+      var val = document.createElement('span');
+      val.className = 'bar-val';
+      val.textContent = fmtAvg(p.avg) + ' ';
+      var n = document.createElement('small');
+      n.textContent = '(' + p.n + ')';
+      val.appendChild(n);
+
+      row.appendChild(name);
+      row.appendChild(track);
+      row.appendChild(val);
+
+      function showTip(){
+        tip.textContent = '';
+        [p.name,
+         'Promedio: ' + fmtAvg(p.avg) + ' / 6 — ' + verdictFor(Math.round(p.avg)).label,
+         'Evaluaciones: ' + p.n,
+         'Última: ' + fmtWhen(p.last)
+        ].forEach(function(line, i){
+          var d = document.createElement('div');
+          d.textContent = line;
+          if(i === 0){ d.style.fontWeight = '600'; }
+          tip.appendChild(d);
+        });
+        tip.hidden = false;
+        var top = row.offsetTop + row.offsetHeight + 4;
+        var left = Math.min(track.offsetLeft, barsEl.clientWidth - tip.offsetWidth);
+        tip.style.top = top + 'px';
+        tip.style.left = Math.max(0, left) + 'px';
+      }
+      function hideTip(){ tip.hidden = true; }
+      row.addEventListener('mouseenter', showTip);
+      row.addEventListener('focus', showTip);
+      row.addEventListener('mouseleave', hideTip);
+      row.addEventListener('blur', hideTip);
+
+      barsEl.insertBefore(row, tip);
+    });
+  }
+
   function loadEntries(){
     archiveStatus.hidden = false;
     archiveStatus.textContent = 'Cargando…';
-    db.collection('respuestas').orderBy('ts', 'desc').limit(30).get()
-      .then(function(snap){ renderEntries(snap.docs); })
+    db.collection('respuestas').orderBy('ts', 'desc').limit(500).get()
+      .then(function(snap){
+        var rows = snap.docs.map(function(s){ return s.data() || {}; })
+          .filter(function(d){ return typeof d.total === 'number'; });
+        renderEntries(snap.docs.slice(0, 30));
+        renderMood(rows);
+        renderChart(rows);
+      })
       .catch(function(){
         archiveStatus.textContent = 'No se pudo cargar el historial ahora mismo.';
+        chartStatus.textContent = 'No se pudo cargar el gráfico ahora mismo.';
+        chartStatus.hidden = false;
       });
   }
 
   refreshBtn.addEventListener('click', loadEntries);
   loadEntries();
-
-  var verdicts = [
-    { min: 5, label: 'Crack', color: 'good',
-      roast: 'Sorprendente: Un tremendo crack' },
-    { min: 3, label: 'Medio medio', color: 'accent',
-      roast: 'Se entendió pero costó' },
-    { min: 0, label: 'Tremendo hdp', color: 'accent',
-      roast: 'Ponele onda que por algo te pagan' }
-  ];
 
   form.addEventListener('submit', function(ev){
     ev.preventDefault();
@@ -635,10 +1048,7 @@
     }
     hint.textContent = '';
 
-    var verdict = verdicts[verdicts.length - 1];
-    for(var v=0; v<verdicts.length; v++){
-      if(total >= verdicts[v].min){ verdict = verdicts[v]; break; }
-    }
+    var verdict = verdictFor(total);
 
     var stampEl = document.getElementById('stampText');
     stampEl.style.setProperty('--stamp-color', verdict.color === 'good' ? 'var(--good)' : 'var(--accent)');
