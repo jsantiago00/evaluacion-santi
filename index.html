@@ -531,8 +531,7 @@
     position: relative;
     height: 14px;
     background:
-      linear-gradient(to right, transparent calc(33.333% - .5px), var(--rule) calc(33.333% - .5px), var(--rule) calc(33.333% + .5px), transparent calc(33.333% + .5px)),
-      linear-gradient(to right, transparent calc(66.666% - .5px), var(--rule) calc(66.666% - .5px), var(--rule) calc(66.666% + .5px), transparent calc(66.666% + .5px));
+      repeating-linear-gradient(to right, transparent 0 calc(20% - 1px), var(--rule) calc(20% - 1px) 20%);
     border-left: 1px solid var(--ink-soft);
   }
   .bar-fill{
@@ -563,9 +562,11 @@
   .bar-axis .ticks{ position: relative; height: 14px; }
   .bar-axis .ticks span{ position: absolute; transform: translateX(-50%); }
   .bar-axis .ticks span:nth-child(1){ left: 0; }
-  .bar-axis .ticks span:nth-child(2){ left: 33.333%; }
-  .bar-axis .ticks span:nth-child(3){ left: 66.666%; }
-  .bar-axis .ticks span:nth-child(4){ left: 100%; }
+  .bar-axis .ticks span:nth-child(2){ left: 20%; }
+  .bar-axis .ticks span:nth-child(3){ left: 40%; }
+  .bar-axis .ticks span:nth-child(4){ left: 60%; }
+  .bar-axis .ticks span:nth-child(5){ left: 80%; }
+  .bar-axis .ticks span:nth-child(6){ left: 100%; }
   .tip{
     position: absolute;
     z-index: 2;
@@ -614,11 +615,11 @@
       <fieldset>
         <legend>1. ¿Te resolvió el problema?</legend>
         <div class="opt">
-          <input type="radio" name="q1" id="q1a" value="2|Sí, quedó andando" required>
+          <input type="radio" name="q1" id="q1a" value="4|Sí, quedó andando" required>
           <label for="q1a"><span class="letter">A</span>Sí, quedó andando</label>
         </div>
         <div class="opt">
-          <input type="radio" name="q1" id="q1b" value="1|A medias, el resto lo terminé yo">
+          <input type="radio" name="q1" id="q1b" value="2|A medias, el resto lo terminé yo">
           <label for="q1b"><span class="letter">B</span>A medias, el resto lo terminé yo</label>
         </div>
         <div class="opt">
@@ -630,11 +631,11 @@
       <fieldset>
         <legend>2. ¿Qué tan rápido te dio bola?</legend>
         <div class="opt">
-          <input type="radio" name="q2" id="q2a" value="2|Al toque" required>
+          <input type="radio" name="q2" id="q2a" value="3|Al toque" required>
           <label for="q2a"><span class="letter">A</span>Al toque</label>
         </div>
         <div class="opt">
-          <input type="radio" name="q2" id="q2b" value="1|Después de un &quot;ahora te veo&quot;">
+          <input type="radio" name="q2" id="q2b" value="2|Después de un &quot;ahora te veo&quot;">
           <label for="q2b"><span class="letter">B</span>Después de un "ahora te veo"</label>
         </div>
         <div class="opt">
@@ -646,11 +647,11 @@
       <fieldset>
         <legend>3. ¿Cómo fue la onda al ayudarte?</legend>
         <div class="opt">
-          <input type="radio" name="q3" id="q3a" value="2|Re buena, cero drama" required>
+          <input type="radio" name="q3" id="q3a" value="3|Re buena, cero drama" required>
           <label for="q3a"><span class="letter">A</span>Re buena, cero drama</label>
         </div>
         <div class="opt">
-          <input type="radio" name="q3" id="q3b" value="1|Bien, pero se notaba que estaba en otra">
+          <input type="radio" name="q3" id="q3b" value="2|Bien, pero se notaba que estaba en otra">
           <label for="q3b"><span class="letter">B</span>Bien, pero se notaba que estaba en otra</label>
         </div>
         <div class="opt">
@@ -671,7 +672,7 @@
     <div id="result" hidden>
       <div class="result-head">
         <span class="stamp" id="stampText"></span>
-        <span class="score">puntaje<b id="scoreText"></b>de 6</span>
+        <span class="score">puntaje<b id="scoreText"></b>de 10</span>
       </div>
       <p class="roast" id="roastText"></p>
       <div class="report" id="reportText"></div>
@@ -740,7 +741,7 @@
         </g>
       </svg>
       <div class="mood-info">
-        <p class="mood-avg"><b id="avgText">—</b> / 6<br><span id="avgCount">promedio general</span></p>
+        <p class="mood-avg"><b id="avgText">—</b> / 10<br><span id="avgCount">promedio general</span></p>
         <span class="stamp mood-stamp" id="moodStamp">Sin datos</span>
         <p class="mood-text" id="moodText">Todavía nadie lo evaluó.</p>
       </div>
@@ -751,10 +752,10 @@
     <div class="archive-head">
       <h2>Promedio por persona</h2>
     </div>
-    <p class="chart-sub">Puntaje promedio (0–6) de cada evaluador · (n) = cantidad de evaluaciones</p>
+    <p class="chart-sub">Puntaje promedio (0–10) de cada evaluador · (n) = cantidad de evaluaciones</p>
     <p class="archive-status" id="chartStatus">Cargando…</p>
     <div class="bars" id="bars"></div>
-    <div class="bar-axis" id="barAxis" hidden><span></span><span class="ticks"><span>0</span><span>2</span><span>4</span><span>6</span></span><span></span></div>
+    <div class="bar-axis" id="barAxis" hidden><span></span><span class="ticks"><span>0</span><span>2</span><span>4</span><span>6</span><span>8</span><span>10</span></span><span></span></div>
   </div>
 
   <div class="archive">
@@ -838,7 +839,7 @@
       vLabel.textContent = String(d.verdictLabel || '—');
       var vScore = document.createElement('span');
       vScore.className = 'entry-score';
-      vScore.textContent = (typeof d.total === 'number' ? d.total : '?') + '/6';
+      vScore.textContent = (typeof d.total === 'number' ? fmtScore(score10(d)) : '?') + '/10';
       top.appendChild(vLabel);
       top.appendChild(vScore);
 
@@ -861,9 +862,9 @@
   }
 
   var verdicts = [
-    { min: 5, label: 'Crack', color: 'good', mood: 'is-good',
+    { min: 8, label: 'Crack', color: 'good', mood: 'is-good',
       roast: 'Sorprendente: Un tremendo crack' },
-    { min: 3, label: 'Medio medio', color: 'accent', mood: 'is-mid',
+    { min: 5, label: 'Medio medio', color: 'accent', mood: 'is-mid',
       roast: 'Ayudó, pero costó' },
     { min: 0, label: 'Tremendo hdp', color: 'accent', mood: 'is-bad',
       roast: 'Ponele onda que por algo te pagan' }
@@ -878,6 +879,15 @@
 
   function fmtAvg(n){
     return n.toLocaleString('es-AR', {minimumFractionDigits: 1, maximumFractionDigits: 1});
+  }
+
+  // las evaluaciones viejas (sin "max") se guardaron sobre 6; se pasan a escala de 10
+  function score10(d){
+    return d.max === 10 ? d.total : d.total * 10 / 6;
+  }
+
+  function fmtScore(n){
+    return Number.isInteger(n) ? String(n) : n.toLocaleString('es-AR', {maximumFractionDigits: 1});
   }
 
   // --- muñequito: cambia según el promedio general ---
@@ -958,7 +968,7 @@
       var row = document.createElement('div');
       row.className = 'bar-row';
       row.tabIndex = 0;
-      row.setAttribute('aria-label', p.name + ': promedio ' + fmtAvg(p.avg) + ' de 6, ' + p.n + ' evaluaciones');
+      row.setAttribute('aria-label', p.name + ': promedio ' + fmtAvg(p.avg) + ' de 10, ' + p.n + ' evaluaciones');
 
       var name = document.createElement('span');
       name.className = 'bar-name';
@@ -968,7 +978,7 @@
       track.className = 'bar-track';
       var fill = document.createElement('span');
       fill.className = 'bar-fill';
-      fill.style.width = (p.avg / 6 * 100) + '%';
+      fill.style.width = (p.avg / 10 * 100) + '%';
       track.appendChild(fill);
 
       var val = document.createElement('span');
@@ -985,7 +995,7 @@
       function showTip(){
         tip.textContent = '';
         [p.name,
-         'Promedio: ' + fmtAvg(p.avg) + ' / 6 — ' + verdictFor(Math.round(p.avg)).label,
+         'Promedio: ' + fmtAvg(p.avg) + ' / 10 — ' + verdictFor(Math.round(p.avg)).label,
          'Evaluaciones: ' + p.n,
          'Última: ' + fmtWhen(p.last)
         ].forEach(function(line, i){
@@ -1016,7 +1026,8 @@
     db.collection('respuestas').orderBy('ts', 'desc').limit(500).get()
       .then(function(snap){
         var rows = snap.docs.map(function(s){ return s.data() || {}; })
-          .filter(function(d){ return typeof d.total === 'number'; });
+          .filter(function(d){ return typeof d.total === 'number'; })
+          .map(function(d){ return { from: d.from, total: score10(d), ts: d.ts }; });
         renderEntries(snap.docs.slice(0, 30));
         renderMood(rows);
         renderChart(rows);
@@ -1060,7 +1071,7 @@
     var obs = document.getElementById('obs').value.trim();
 
     var report = 'INFORME DE EVALUACIÓN — PARA: SANTI\n';
-    report += 'Veredicto: ' + verdict.label + '  (' + total + '/6)\n';
+    report += 'Veredicto: ' + verdict.label + '  (' + total + '/10)\n';
     report += lines.join('\n') + '\n';
     if(obs){ report += 'Observaciones: ' + obs + '\n'; }
     report += (from ? 'Evaluador: ' + from : 'Evaluador: anónimo');
@@ -1078,6 +1089,7 @@
       verdictLabel: verdict.label,
       lines: lines,
       obs: obs,
+      max: 10,
       ts: Date.now()
     }).then(function(){
       saveNote.textContent = 'Guardado — Santi va a poder verlo en "Legajo" abajo.';
